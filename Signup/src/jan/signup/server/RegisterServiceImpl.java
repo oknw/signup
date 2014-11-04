@@ -106,7 +106,9 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements
 		
 		boolean alreadyCreated = 
 				(res.getWorkflowStatus() == StatusType.ADMIN_CONFIRMED) || (res.getWorkflowStatus() == StatusType.ADMIN_REJECT);
+		boolean accepted = (res.getWorkflowStatus() == StatusType.ADMIN_CONFIRMED);
 		UserAccountRequest req = new UserAccountRequest(firstName, lastName, email, unit, alreadyCreated, ldapParent, emailNew, domain);
+		req.setAccepted(accepted);
 		return req;
 	}
 
@@ -122,25 +124,28 @@ public class RegisterServiceImpl extends RemoteServiceServlet implements
 		res.setLdapParent(request.getLdapParent());
 		res.setEmailNew(request.getEmailNew());
 		dbService.update(res);
+		LdapUser user = new LdapUser();
+		user.setFirstName(request.getFirstName());
+		user.setLastName(request.getLastName());
+		user.setForwardAddress(request.getEmail());
+		user.setMailAdress(request.getEmailNew() + "@" + request.getDomain());
+		user.setPassword(generatePassword());
+		user.setPrivateMailAdress(request.getEmail());
 		
 		if(createType != CreateType.REJECT){
-			LdapUser user = new LdapUser();
-			user.setFirstName(request.getFirstName());
-			user.setLastName(request.getLastName());
-			user.setForwardAddress(request.getEmail());
-			user.setMailAdress(request.getEmailNew() + "@" + request.getDomain());
-			user.setPassword(generatePassword());
-			user.setPrivateMailAdress(request.getEmail());
 			if(createType == CreateType.ACCEPT){
+				mailService.sendAdminDone(user, " als Weiterleitung angelegt");
 				ldapService.createUser(user,parentDn);
 				mailService.sendCreated(user, user.getPassword());
 			}else{
 				ldapService.createImapUser(user,parentDn);
 				mailService.sendCreatedImap(user, user.getPassword());
+				mailService.sendAdminDone(user, " als IMAP-Postfach angelegt");
 			}
 			dbService.setState(res, StatusType.ADMIN_CONFIRMED);
 		}else{
 			dbService.setState(res,StatusType.ADMIN_REJECT);
+			mailService.sendAdminDone(user, " abgewiesen.");
 		}
 	}
 

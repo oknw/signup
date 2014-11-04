@@ -35,13 +35,14 @@ public class S01Display implements Display {
 	private ListBox createModeBox = new ListBox();
 	private ListBox domainListBox = new ListBox();
 
-	private HTML alreadyCreated = new HTML();
+	private HTML error = new HTML();
 	
 	
 	public S01Display(){
 		domainListBox.setWidth("9em");
-		alreadyCreated.setVisible(false);
-		alreadyCreated.setHTML("<span style='color: #F00;'>"+msgs.alreadyCreated() + "</span>");
+		error.setVisible(false);
+		error.setHTML("<span style='color: #F00;'></span>");
+		
 		unit.setEnabled(false);
 		email.setEnabled(false);
 		widget.setText(msgs.title());
@@ -63,7 +64,7 @@ public class S01Display implements Display {
 		
 		//Already-Created Warning
 		table.getFlexCellFormatter().setColSpan(0, 0, 2);
-		table.setWidget(0, 0, alreadyCreated);
+		table.setWidget(0, 0, error);
 		
 		//firstName
 		table.setWidget(1, 0,new Label(msgs.firstName()));
@@ -187,8 +188,13 @@ public class S01Display implements Display {
 		}
 	}
 	
-	public void warnCreated(){
-		alreadyCreated.setVisible(true);
+	public void warnCreated(boolean accepted){
+		if(accepted){
+			error.setHTML("<span style='color: #F00;'>"+msgs.alreadyCreated()+"</span>");
+		} else {
+			error.setHTML("<span style='color: #F00;'>"+msgs.rejected()+"</span>");
+		}
+		error.setVisible(true);
 		ldapParent.clear();
 		firstName.setEnabled(false);
 		lastName.setEnabled(false);

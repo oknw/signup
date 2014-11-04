@@ -16,4 +16,5 @@ public interface S01Messages extends Constants {
 	public String ldapParent();
 	public String emailNew();
 	public String alreadyCreated();
+	public String rejected();
 }

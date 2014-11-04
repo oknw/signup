@@ -60,7 +60,7 @@ public class AppProps {
 	public String getAdminConfirmTemplate() {
 		return props.getProperty("mail.adminConfirmTemplate");
 	}
-	public String getAminAddr(){
+	public String getAdminAddr(){
 		return props.getProperty("mail.adminAddr");
 	}
 
@@ -138,6 +138,14 @@ public class AppProps {
 
 	public String getValidDomains() {
 		return props.getProperty("env.validMaildomains","");
+	}
+
+	public String getAdminDoneSubject() {
+		return props.getProperty("mail.adminDoneSubject");
+	}
+
+	public String getAdminDoneTemplate() {
+		return props.getProperty("mail.adminDoneTempltae");
 	}
 
 		

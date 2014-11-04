@@ -9,4 +9,5 @@ public interface MailService {
 	public void sendCreated(LdapUser user, String passwd);
 	public void sendCreatedImap(LdapUser user, String passwd);
 	public void sendResetPasswordConfirm(LdapUser user, String tokenUrl);
+	public void sendAdminDone(LdapUser user, String aktion);
 }

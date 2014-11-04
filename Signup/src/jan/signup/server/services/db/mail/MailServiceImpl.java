@@ -30,6 +30,7 @@ public class MailServiceImpl implements MailService {
 	private final static String USER_ATTR = "user";
 	private final static String TOKEN_URL_ATTR = "tokenUrl";
 	private final static String PASSWD_ATTR = "passwd";
+	private static final String AKTION_ATTR = "aktion";
 	
 	private AppProps props = AppProps.getDefaultInstance();
 	
@@ -64,13 +65,24 @@ public class MailServiceImpl implements MailService {
 	}
 
 	@Override
+	public void sendAdminDone(LdapUser user, String aktion) {
+		String subject = props.getAdminDoneSubject();
+		HashMap<String, Object> env = new HashMap<String, Object>();
+		env.put(USER_ATTR, user);
+		env.put(AKTION_ATTR, aktion);
+		String content = getContent(props.getAdminDoneTemplate(), env);
+		sendMail(subject, content, props.getAdminAddr());
+		
+	}
+	
+	@Override
 	public void sendAdminConfirm(UAREntity user, String tokenUrl) {
 		String subject = props.getAdminConfirmSubject();
 		HashMap<String, Object> env = new HashMap<String, Object>();
 		env.put(USER_ATTR, user);
 		env.put(TOKEN_URL_ATTR, tokenUrl);
 		String content = getContent(props.getAdminConfirmTemplate(), env);
-		sendMail(subject, content, props.getAminAddr());
+		sendMail(subject, content, props.getAdminAddr());
 		
 	}
 
@@ -173,5 +185,7 @@ public class MailServiceImpl implements MailService {
 
 		}
 	}
+	
+
 	
 }

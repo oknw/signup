@@ -14,6 +14,8 @@ public class UserAccountRequest implements Serializable{
 	private String ldapParent;
 	private String emailNew;
 	private String domain;
+	private boolean accepted;
+	
 	
 	public UserAccountRequest(){
 		super();
@@ -133,5 +135,20 @@ public class UserAccountRequest implements Serializable{
 	public void setDomain(String domain) {
 		this.domain = domain;
 	}
+
+
+
+	public boolean isAccepted() {
+		return accepted;
+	}
+
+
+
+	public void setAccepted(boolean accepted) {
+		this.accepted = accepted;
+	}
+
+
+
 	
 }
